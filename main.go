@@ -126,7 +126,10 @@ func Run(ctx *build.Context, filename string, offset int64) (*Doc, error) {
 	}
 	bp, err := buildutil.ContainingPackage(ctx, wd, filename)
 	if err != nil {
-		return nil, fmt.Errorf("gogetdoc: couldn't get package for %s: %s", filename, err.Error())
+		bp, err = ctx.ImportDir(ctx.GOROOT, build.FindOnly)
+		if err != nil {
+			return nil, fmt.Errorf("gogetdoc: couldn't get package for %s: %s", filename, err.Error())
+		}
 	}
 
 	var parseError error
